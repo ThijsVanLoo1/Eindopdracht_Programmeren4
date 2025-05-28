@@ -1,12 +1,12 @@
-import { ImageSource, Sound, Resource, Loader } from 'excalibur'
+import { ImageSource, Sound, Resource, Loader, SpriteSheet } from 'excalibur'
 
 // voeg hier jouw eigen resources toe
 const Resources = {
-    Fish: new ImageSource('images/fish.png')
+    Background: new ImageSource('images/background.png'),
+    PlayerRun: new ImageSource('/images/Run.png'),
+    PlayerJump: new ImageSource('/images/Jump.png'),
+    PlayerFall: new ImageSource('/images/Fall.png')
 }
-
-
-
 
 const ResourceLoader = new Loader()
 for (let res of Object.values(Resources)) {
