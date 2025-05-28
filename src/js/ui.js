@@ -17,7 +17,7 @@ constructor(player1) {
             font: new Font({
                 size: 20,
                 family: 'Open Sans',
-                color: Color.Black
+                color: Color.White
             })
         });
 

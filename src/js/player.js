@@ -1,17 +1,24 @@
-import { Actor, Vector, Keys, CollisionType, SpriteSheet, range, Animation, Color } from "excalibur"
+import { Actor, Vector, Keys, CollisionType, SpriteSheet, range, Animation, Color, CompositeCollider, Shape } from "excalibur"
 import { Resources } from "./resources"
 import { Ground } from "./ground";
 import { Gap } from "./gap";
+import { Saw } from "./saw";
+import { Platform } from "./platform";
+import { Strawberry } from "./strawberry";
 
 export class Player extends Actor {
 
-    jumpForce = 800;
-    acceleration = 1200;
-    maxSpeed = 2000;
+    jumpForce = 500;
+    acceleration = 1800;
+    maxSpeed = 2500;
     run;
     idle;
+    death;
+    respawn;
+    isDead = false;
     isGrounded = false;
     lives = 3;
+    strawberries = 0;
     ui;
 
     constructor() {
@@ -22,6 +29,13 @@ export class Player extends Actor {
     }
 
      onInitialize(engine) {
+        let capsule = new CompositeCollider([
+            Shape.Circle(10, new Vector(0, -5)),
+            Shape.Box(20, 20),
+            Shape.Circle(10, new Vector(0, 5)),
+            ])
+            this.body.collisionType = CollisionType.Active
+            this.collider.set(capsule);
         this.engine = engine;
         //ANIMATIES//
 
@@ -38,11 +52,11 @@ export class Player extends Actor {
 
         //PLAYER PHYSICS SETTINGS//
 
-        this.body.collisionType = CollisionType.Active;
         this.body.friction = 0;
         this.body.linearDamping = 0;
+        this.body.bounciness = 0;
         this.body.sleepingAllowed = false;
-        this.body.motionType = 1;
+        this.body.motionType = 1; // === dynamic
         //                      //
 
         this.pos = new Vector(320, 600);
@@ -51,10 +65,12 @@ export class Player extends Actor {
         this.events.on("collisionstart", (e) => this.checkGrounded(e));
         this.events.on("collisionend", (e) => this.checkGrounded(e));
 
-        this.events.on("collisionstart", (e) => this.checkGap(e));
+        this.events.on("collisionstart", (e) => this.hit(e));
     }
 
-    onPreUpdate(engine) {
+    onPreUpdate(engine, delta) {
+        if (this.isDead) return; //Stop alle animaties wanneer dood
+
         this.acc = Vector.Zero;
 
         this.graphics.use(this.idle);
@@ -88,35 +104,53 @@ export class Player extends Actor {
 
         if(engine.input.keyboard.isHeld(Keys.Space)) {
             if(this.isGrounded) {
-                this.vel.y = -this.jumpForce;
+                this.body.applyLinearImpulse(new Vector(0, -this.jumpForce * delta));
                 this.isGrounded = false;
             }
         }
 
-        this.vel = this.vel.scale(0.95); //velocity neemt langzaam af bij loslaten keys
+        this.vel = this.vel.scale(0.90); //velocity neemt langzaam af bij loslaten keys
         //      //
     }
 
     checkGrounded(e) {
-        if(e.other.owner instanceof Ground) {
+        if(e.other.owner instanceof Ground || e.other.owner instanceof Platform) {
             this.isGrounded = true;
         } else {
             this.isGrounded = false;
         }
     }
 
-    checkGap(e) {
-        if(e.other.owner instanceof Gap) {
-            //Death animation//
+    hit(e) {
+        if(e.other.owner instanceof Gap || e.other.owner instanceof Saw && !this.isDead) {
+            this.isDead = true;
+
+            //DEATH ANIMATION
+            const deathAnimation = SpriteSheet.fromImageSource({
+                image: Resources.Disappearing,
+                grid: { rows: 1, columns: 7, spriteWidth: 96, spriteHeight: 96 }
+            })
+            this.death = Animation.fromSpriteSheet(deathAnimation, range(0, 6), 80);
+            this.graphics.add("death", this.death);
+            this.graphics.use(this.death);
+            //
+
             this.lives--;
             this.engine.ui.updateLives();
-            this.playerRespawn();
+            //WAIT FOR FINISH ANIMATION
+            setTimeout(() => {
+                this.isDead = false;
+                this.playerRespawn();
+            }, 560);
+        } else if(e.other.owner instanceof Strawberry) {
+            this.strawberries++;
+            e.other.owner.kill();
         }
     }
 
     playerRespawn() {
         if(this.lives > 0) {
-            this.pos = new Vector(300, 500);
+            this.pos = new Vector(300, 600);
         } else {
             this.kill();
         }

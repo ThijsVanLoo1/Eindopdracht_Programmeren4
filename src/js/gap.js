@@ -1,11 +1,15 @@
-import { Actor, Color } from "excalibur";
+import { Actor, CollisionType, Color } from "excalibur";
 import { Player } from "./player";
 
 export class Gap extends Actor {
-    constructor(width, height, x, y) {
+    constructor(x, y, width, height) {
         super({
-            width, height, x, y,
+            x, y, width, height,
             color: Color.Red
         });
+    }
+
+    onInitialize(engine) {
+        this.body.collisionType = CollisionType.Fixed;
     }
 }

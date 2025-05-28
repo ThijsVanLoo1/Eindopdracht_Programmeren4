@@ -1,18 +1,16 @@
 import { Actor, CollisionType, Color } from "excalibur";
+import { Player } from "./player";
 
 export class Ground extends Actor {
-    constructor(xpos, ypos, width, height) {
+    constructor(x, y, width, height) {
         super({
-            x: xpos,
-            y: ypos,
-            width: width,
-            height: height,
+            x, y, width, height,
             color: Color.Black,
             collisionType: CollisionType.Fixed
         })
     }
 
     onInitialize(engine) {
-        this.body.friction = 0;
+    this.body.friction = 0;
     }
 }

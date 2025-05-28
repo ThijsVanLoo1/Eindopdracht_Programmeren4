@@ -5,6 +5,10 @@ import { Player } from './player.js'
 import { UI } from './ui.js'
 import { Ground } from './ground.js'
 import { Gap } from './gap.js'
+import { Platform } from './platform.js'
+import { Saw } from './saw.js'
+import { Strawberry } from './strawberry.js'
+import { Background } from './background.js'
 
 export class Game extends Engine {
 
@@ -20,12 +24,14 @@ export class Game extends Engine {
                 solver: SolverStrategy.Realistic
             }
          })
-         this.physics.gravity = new Vector(0, 2000);
+         this.physics.gravity = new Vector(0, 2500);
          this.start(ResourceLoader).then(() => this.startGame())
     }
 
     startGame() {
         console.log("start de game!")
+        const background = new Background();
+        this.add(background);
 
         const player = new Player();
         this.add(player);
@@ -34,12 +40,20 @@ export class Game extends Engine {
         this.add(ground);
         const ground2 = new Ground(1100, 720, 400, 100);
         this.add(ground2);
+        const platform = new Platform(500, 580, 100, 10);
+        this.add(platform);
 
-        const gap = new Gap(200, 10, 800, 770);
+        const gap = new Gap(800, 730, 200, 10);
         this.add(gap);
 
         this.ui = new UI(player);
         this.add(this.ui);
+
+        const sawBlade = new Saw(600, 550);
+        this.add(sawBlade);
+
+        const strawberry = new Strawberry(800, 500);
+        this.add(strawberry);
     }
 }
 
