@@ -3,7 +3,7 @@ import { ImageSource, Sound, Resource, Loader, SpriteSheet } from 'excalibur'
 // voeg hier jouw eigen resources toe
 const Resources = {
     Background: new ImageSource('images/background.jpg'),
-    PlayerRun: new ImageSource('/images/Run.png'),
+    PlayerRun: new ImageSource('images/Run.png'),
     PlayerJump: new ImageSource('images/Jump.png'),
     PlayerFall: new ImageSource('images/Fall.png'),
     SawOn: new ImageSource('images/Saw-on.png'),
