@@ -9,7 +9,9 @@ const Resources = {
     SawOn: new ImageSource('/images/Saw-on.png'),
     Appearing: new ImageSource('/images/Appearing.png'),
     Disappearing: new ImageSource('/images/Disappearing.png'),
-    Strawberry: new ImageSource('/images/Strawberry.png')
+    Strawberry: new ImageSource('/images/Strawberry.png'),
+    Heart: new ImageSource('images/Heart.png'),
+    Flag: new ImageSource('images/red-flag.png')
 }
 
 const ResourceLoader = new Loader()

@@ -3,7 +3,6 @@ import { Resources } from "./resources";
 import { Player } from "./player";
 
 export class Strawberry extends Actor {
-    animation;
     constructor(x, y) {
         super({
             x, y,
@@ -21,8 +20,8 @@ export class Strawberry extends Actor {
             grid: { rows: 1, columns: 17, spriteWidth: 32, spriteHeight: 32 }
         })
 
-        this.animation = Animation.fromSpriteSheet(strawberryAnimation, range(0, 16), 20);
-        this.graphics.add("animation", this.animation);
-        this.graphics.use(this.animation);
+        const animation = Animation.fromSpriteSheet(strawberryAnimation, range(0, 16), 20);
+        this.graphics.add("animation", animation);
+        this.graphics.use(animation);
     }
 }

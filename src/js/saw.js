@@ -2,9 +2,6 @@ import { Actor, Animation, CollisionType, range, SpriteSheet, Vector } from "exc
 import { Resources } from "./resources";
 
 export class Saw extends Actor {
-
-    animation;
-
     constructor(x, y) {
         super({
             x, y,
@@ -21,8 +18,8 @@ export class Saw extends Actor {
             grid: { rows: 1, columns: 8, spriteWidth: 38, spriteHeight: 38 }
         })
 
-        this.animation = Animation.fromSpriteSheet(sawAnimation, range(0, 7), 80);
-        this.graphics.add("animation", this.animation);
-        this.graphics.use(this.animation);
+        const animation = Animation.fromSpriteSheet(sawAnimation, range(0, 7), 80);
+        this.graphics.add("animation", animation);
+        this.graphics.use(animation);
     }
 }

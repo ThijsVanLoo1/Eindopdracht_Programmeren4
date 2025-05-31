@@ -2,7 +2,7 @@ import { Actor, Color, Font, Label, Vector } from "excalibur";
 
 export class UI extends Actor {
 
-label;
+#label;
 player1Object;
 
 constructor(player1) {
@@ -11,20 +11,34 @@ constructor(player1) {
 }
 
     onInitialize(engine) {
-        this.label = new Label({
-            text: `Lives: 3`,
-            pos: new Vector(100, 50),
+        this.#label = new Label({
+            text: `Strawberries: 0`,
+            pos: new Vector(1100, 50),
             font: new Font({
                 size: 20,
                 family: 'Open Sans',
-                color: Color.White
+                color: Color.Black
             })
         });
 
-        this.addChild(this.label);
+        this.addChild(this.#label);
     }
 
-    updateLives() {
-        this.label.text = `Lives: ${this.player1Object.lives}`;
+    updateScore() {
+        this.#label.text = `Strawberries: ${this.player1Object.strawberries}`;
+    }
+
+    gameOver() {
+        this.#label = new Label({
+            text: `Game Over`,
+            pos: new Vector(400, 300),
+            font: new Font({
+                size: 100,
+                family: 'Open Sans',
+                color: Color.Red
+            })
+        });
+
+        this.addChild(this.#label);
     }
 }
